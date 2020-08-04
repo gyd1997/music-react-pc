@@ -1,9 +1,31 @@
 import React, { memo } from 'react'
+import { renderRoutes } from 'react-router-config';
+import { NavLink } from 'react-router-dom';
+import { discoverMenu } from '@/common/local-data'
 
-export default memo(function YDDiscover() {
+import { 
+  DiscoverWrapper,
+  TopMenu
+} from './style';
+
+export default memo(function YDDiscover(props) {
+  const { route } = props
   return (
-    <div>
-      <h2>YDDiscover</h2>
-    </div>
+    <DiscoverWrapper>
+      <div className="top">
+        <TopMenu className="wrap-v1">
+          {
+            discoverMenu.map((item, index) => {
+              return (
+                <div className="item" key={item.title}>
+                  <NavLink to={item.link}>{item.title}</NavLink>
+                </div>
+              )
+            })
+          }
+        </TopMenu>
+      </div>
+      {renderRoutes(route.routes)}
+    </DiscoverWrapper>
   )
 })
