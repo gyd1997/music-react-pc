@@ -12,3 +12,12 @@ export function getHotRecommends(limit) {
     params: {limit}
   })
 }
+
+export function getNewAlbums(limit) {
+  return request({
+    url: '/top/album',
+    params: {
+      limit
+    }
+  })
+}
