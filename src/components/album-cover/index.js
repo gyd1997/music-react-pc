@@ -9,6 +9,7 @@ export default memo(function YDAlbumCover(props) {
     <AlbumWrapper size={size} width={width} bgp={bgp}>
       <div className="album-image">
         <img src={getSizeImage(info.picUrl)} alt=""/>
+        {/* eslint-disable-next-line */}
         <a className="cover image_cover" href="/todo"></a>
       </div>
       <div className="album-info">

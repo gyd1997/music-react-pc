@@ -1,11 +1,12 @@
 import React, { memo } from 'react'
 
 import YDThemeHeaderRCM from '@/components/theme-header-rcm'
+import { RankingWrapper } from './style'
 
 export default memo(function YDRecommendRanking() {
   return (
-    <div>
+    <RankingWrapper>
       <YDThemeHeaderRCM title="榜单"/>
-    </div>
+    </RankingWrapper>
   )
 })
