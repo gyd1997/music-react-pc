@@ -10,6 +10,9 @@ import YDTopBannner from './c-cpns/top-banner';
 import YDHotRecommend from './c-cpns/hot-recommend'
 import YDNewAlbum from './c-cpns/new-album'
 import YDRecommendRanking from './c-cpns/recommend-ranking'
+import UserLogin from './c-cpns/user-login';
+import SettleSingle from './c-cpns/settle-single';
+import HotAnchor from './c-cpns/hot-anchor';
 
 function YDRecommend(props) {
 
@@ -22,7 +25,11 @@ function YDRecommend(props) {
           <YDNewAlbum/>
           <YDRecommendRanking/>
         </RecommendLeft>
-        <RecommendRight></RecommendRight>
+        <RecommendRight>
+          <UserLogin/>
+          <SettleSingle/>
+          <HotAnchor/>
+        </RecommendRight>
       </Content>
     </RecommendWrapper>
   )

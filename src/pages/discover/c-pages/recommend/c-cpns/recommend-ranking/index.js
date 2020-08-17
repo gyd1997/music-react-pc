@@ -13,7 +13,7 @@ export default memo(function YDRecommendRanking() {
     upRanking,
     newRanking,
     originRanking
-   } = useSelector(state =>({
+  } = useSelector(state =>({
     upRanking: state.getIn(['recommend', 'upRanking']),
     newRanking: state.getIn(['recommend', 'newRanking']),
     originRanking: state.getIn(['recommend', 'originRanking']),
