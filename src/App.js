@@ -8,6 +8,7 @@ import routes from './router'
 
 import YDAppHeader from 'components/app-header'
 import YDAppFooter from 'components/app-footer'
+import YDAppPlayerBar from './pages/player/app-player-bar'
 
 export default memo(function App() {
   return (
@@ -16,6 +17,7 @@ export default memo(function App() {
         <YDAppHeader/>
           {renderRoutes(routes)}
         <YDAppFooter/>
+        <YDAppPlayerBar/>
       </HashRouter>
     </Provider>
     
