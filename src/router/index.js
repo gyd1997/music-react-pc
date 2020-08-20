@@ -7,6 +7,7 @@ import YDSongs from "../pages/discover/c-pages/songs";
 import YDDjradio from "../pages/discover/c-pages/djradio";
 import YDArtist from "../pages/discover/c-pages/artist";
 import YDAlbum from "../pages/discover/c-pages/album";
+import YDPlayer from '../pages/player';
 
 import YDMine from '@/pages/mine'
 import YDFriend from '@/pages/friend'
@@ -54,6 +55,10 @@ const routes = [
       {
         path: '/discover/djradio',
         component: YDDjradio
+      },
+      {
+        path: '/discover/player',
+        component: YDPlayer
       }
     ]
   },

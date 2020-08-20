@@ -1,9 +1,10 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { getSongDetailAction } from '../store/actionCreator'
+import { getSongDetailAction, changeSequenceAction } from '../store/actionCreator'
 import { getSizeImage, formatMinuteSecond, getPlaySong } from '@/utils/format-utils'
 
+import { NavLink } from 'react-router-dom'
 import { Slider } from 'antd'
 import {
   PlaybarWrapper,
@@ -20,8 +21,9 @@ export default memo(function YDAppPlayerBar() {
   const [isPlaying, setIsPlaying] = useState(false)
 
   // redux hooks
-  const { currentSong } = useSelector(state => ({
-    currentSong: state.getIn(['player', 'currentSong'])
+  const { currentSong, sequence } = useSelector(state => ({
+    currentSong: state.getIn(['player', 'currentSong']),
+    sequence: state.getIn(['player', 'sequence'])
   }), shallowEqual)
   const dispatch = useDispatch()
 
@@ -45,13 +47,21 @@ export default memo(function YDAppPlayerBar() {
   const playMusic = useCallback(() => {
     isPlaying ? audioRef.current.pause() : audioRef.current.play()
     setIsPlaying(!isPlaying)
-  })
+  }, [isPlaying])
 
   const timeUpdate = e => {
     if (!isChanging) {
       setCurrentTime(e.target.currentTime * 1000)
       setProgress( currentTime / duration * 100)
     }
+  }
+
+  const changeSequence = () => {
+    let currentSequence = sequence + 1
+    if (currentSequence > 2) {
+      currentSequence = 0
+    }
+    dispatch(changeSequenceAction(currentSequence))
   }
 
   const sliderChange = useCallback((value) => {
@@ -81,9 +91,9 @@ export default memo(function YDAppPlayerBar() {
         </Control>
         <PlayInfo>
           <div className="image">
-            <a href="/#">
+            <NavLink to="/discover/player">
               <img src={getSizeImage(picUrl, 35)} alt=""/>
-            </a>
+            </NavLink>
           </div>
           <div className="info">
             <div className="song">
@@ -91,7 +101,7 @@ export default memo(function YDAppPlayerBar() {
               <a href="#/" className="singer-name">{singerName}</a>
             </div>
             <div className="progress">
-              <Slider defaultValue={30} value={progress} onChange={sliderChange} onAfterChange={sliderAfterChange}/>
+              <Slider defaultValue={30} value={progress} onChange={sliderChange} onAfterChange={sliderAfterChange} tipFormatter={null}/>
               <div className="time">
                 <span className="now-time">{showCurrentTime}</span>
                 <span className="divider">/</span>
@@ -100,14 +110,14 @@ export default memo(function YDAppPlayerBar() {
             </div>
           </div>
         </PlayInfo>
-        <Operator>
+        <Operator sequence={sequence}>
           <div className="left">
             <button className="sprite_player btn favor"></button>
             <button className="sprite_player btn share"></button>
           </div>
           <div className="right sprite_player">
             <button className="sprite_player btn volume"></button>
-            <button className="sprite_player btn loop"></button>
+            <button className="sprite_player btn loop" onClick={e => changeSequence()}></button>
             <button className="sprite_player btn playlist"></button>
           </div>
         </Operator>
