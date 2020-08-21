@@ -1,7 +1,11 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import { getSongDetailAction, changeSequenceAction } from '../store/actionCreator'
+import {
+  getSongDetailAction,
+  changeSequenceAction,
+  changeCurrentIndexAndSongAction
+} from '../store/actionCreator'
 import { getSizeImage, formatMinuteSecond, getPlaySong } from '@/utils/format-utils'
 
 import { NavLink } from 'react-router-dom'
@@ -13,7 +17,7 @@ import {
   Operator
 } from './style'
 
-export default memo(function YDAppPlayerBar() {
+export default memo(function YDAppPlayerBar () {
   // props and state
   const [currentTime, setCurrentTime] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -28,13 +32,20 @@ export default memo(function YDAppPlayerBar() {
   const dispatch = useDispatch()
 
   // other hooks
+  const audioRef = useRef()
   useEffect(() => {
     dispatch(getSongDetailAction(167876))
   }, [dispatch])
+
   useEffect(() => {
-    audioRef.current.src =  getPlaySong(currentSong.id)
+    audioRef.current.src = getPlaySong(currentSong.id)
+    audioRef.current.play().then(res => {
+      setIsPlaying(true)
+    }).catch(err => {
+      setIsPlaying(false)
+    })
   }, [currentSong])
-  const audioRef = useRef()
+
 
   // other handle
   const picUrl = (currentSong.al && currentSong.al.picUrl) || ''
@@ -50,9 +61,10 @@ export default memo(function YDAppPlayerBar() {
   }, [isPlaying])
 
   const timeUpdate = e => {
+    const currentTime = e.target.currentTime
     if (!isChanging) {
-      setCurrentTime(e.target.currentTime * 1000)
-      setProgress( currentTime / duration * 100)
+      setCurrentTime(currentTime * 1000)
+      setProgress(currentTime * 1000 / duration * 100)
     }
   }
 
@@ -62,6 +74,19 @@ export default memo(function YDAppPlayerBar() {
       currentSequence = 0
     }
     dispatch(changeSequenceAction(currentSequence))
+  }
+
+  const changMusic = (tag) => {
+    dispatch(changeCurrentIndexAndSongAction(tag))
+  }
+
+  const handleMusicEnded = () => {
+    if (sequence === 2) { // 单曲循环
+      audioRef.current.currentTime = 0
+      audioRef.current.play()
+    } else {
+      dispatch(changeCurrentIndexAndSongAction(1))
+    }
   }
 
   const sliderChange = useCallback((value) => {
@@ -85,14 +110,14 @@ export default memo(function YDAppPlayerBar() {
     <PlaybarWrapper className="sprite_player">
       <div className="content wrap-v2">
         <Control isPlaying={isPlaying}>
-          <button className="sprite_player prev"></button>
+          <button className="sprite_player prev" onClick={e => changMusic(-1)}></button>
           <button className="sprite_player play" onClick={e => playMusic()}></button>
-          <button className="sprite_player next"></button>
+          <button className="sprite_player next" onClick={e => changMusic(1)}></button>
         </Control>
         <PlayInfo>
           <div className="image">
             <NavLink to="/discover/player">
-              <img src={getSizeImage(picUrl, 35)} alt=""/>
+              <img src={getSizeImage(picUrl, 35)} alt="" />
             </NavLink>
           </div>
           <div className="info">
@@ -101,7 +126,12 @@ export default memo(function YDAppPlayerBar() {
               <a href="#/" className="singer-name">{singerName}</a>
             </div>
             <div className="progress">
-              <Slider defaultValue={30} value={progress} onChange={sliderChange} onAfterChange={sliderAfterChange} tipFormatter={null}/>
+              <Slider
+                defaultValue={30}
+                value={progress}
+                onChange={sliderChange}
+                onAfterChange={sliderAfterChange}
+                tipFormatter={null} />
               <div className="time">
                 <span className="now-time">{showCurrentTime}</span>
                 <span className="divider">/</span>
@@ -122,7 +152,7 @@ export default memo(function YDAppPlayerBar() {
           </div>
         </Operator>
       </div>
-      <audio ref={audioRef} onTimeUpdate={timeUpdate} />
+      <audio ref={audioRef} onTimeUpdate={e => timeUpdate(e)} onEnded={e =>handleMusicEnded()}/>
     </PlaybarWrapper>
   )
 })
