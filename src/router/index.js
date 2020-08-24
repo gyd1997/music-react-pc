@@ -1,17 +1,18 @@
 import React from 'react';
 
-import YDDiscover from '@/pages/discover'
-import YDRecommend from "../pages/discover/c-pages/recommend";
-import YDRanking from "../pages/discover/c-pages/ranking";
-import YDSongs from "../pages/discover/c-pages/songs";
-import YDDjradio from "../pages/discover/c-pages/djradio";
-import YDArtist from "../pages/discover/c-pages/artist";
-import YDAlbum from "../pages/discover/c-pages/album";
-import YDPlayer from '../pages/player';
-
-import YDMine from '@/pages/mine'
-import YDFriend from '@/pages/friend'
 import { Redirect } from 'react-router-dom'
+
+const YDDiscover = React.lazy(() => import('@/pages/discover'))
+const YDRecommend = React.lazy(() => import("../pages/discover/c-pages/recommend"))
+const YDSongs  = React.lazy(() => import("../pages/discover/c-pages/songs"))
+const YDDjradio  = React.lazy(() => import("../pages/discover/c-pages/djradio"))
+const YDRanking  = React.lazy(() => import("../pages/discover/c-pages/ranking"))
+const YDArtist  = React.lazy(() => import("../pages/discover/c-pages/artist"))
+const YDAlbum  = React.lazy(() => import("../pages/discover/c-pages/album"))
+const YDPlayer  = React.lazy(() => import('../pages/player'))
+const YDMine  = React.lazy(() => import('@/pages/mine'))
+const YDFriend  = React.lazy(() => import('@/pages/friend'))
+
 
 const routes = [
   {
