@@ -18,6 +18,11 @@ const changeCurrentSongIndexAction = (index) => ({
   index
 })
 
+const changeLyricListAction = (lyricList) => ({
+  type: actionTypes.CHANGE_LYRIC_LIST,
+  lyricList
+})
+
 export const changeSequenceAction = (sequence) => ({
   type: actionTypes.CHANGE_SEQUENCE,
   sequence
@@ -89,6 +94,7 @@ export const getLyricAction = (id) => {
     getLyric(id).then(res => {
       const lyric = res.lrc.lyric
       const lyricList = parseLyric(lyric)
+      dispatch(changeLyricListAction(lyricList))
     })
   }
 }
