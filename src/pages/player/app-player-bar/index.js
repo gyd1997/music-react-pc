@@ -4,12 +4,13 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import {
   getSongDetailAction,
   changeSequenceAction,
-  changeCurrentIndexAndSongAction
+  changeCurrentIndexAndSongAction,
+  changeCurrentLyricIndexAction
 } from '../store/actionCreator'
 import { getSizeImage, formatMinuteSecond, getPlaySong } from '@/utils/format-utils'
 
 import { NavLink } from 'react-router-dom'
-import { Slider } from 'antd'
+import { Slider, message } from 'antd'
 import {
   PlaybarWrapper,
   Control,
@@ -25,9 +26,16 @@ export default memo(function YDAppPlayerBar () {
   const [isPlaying, setIsPlaying] = useState(false)
 
   // redux hooks
-  const { currentSong, sequence } = useSelector(state => ({
+  const {
+    currentSong,
+    sequence,
+    lyricList,
+    currentLyricIndex
+  } = useSelector(state => ({
     currentSong: state.getIn(['player', 'currentSong']),
-    sequence: state.getIn(['player', 'sequence'])
+    sequence: state.getIn(['player', 'sequence']),
+    lyricList: state.getIn(['player', 'lyricList']),
+    currentLyricIndex: state.getIn(['player', 'currentLyricIndex'])
   }), shallowEqual)
   const dispatch = useDispatch()
 
@@ -65,6 +73,23 @@ export default memo(function YDAppPlayerBar () {
     if (!isChanging) {
       setCurrentTime(currentTime * 1000)
       setProgress(currentTime * 1000 / duration * 100)
+    }
+    let i = 0
+    for (; i < lyricList.length; i++) {
+      let lyricItem = lyricList[i]
+      if (currentTime * 1000 < lyricItem.time) {
+        break
+      }
+    }
+    if (currentLyricIndex !== i - 1) {
+      dispatch(changeCurrentLyricIndexAction(i - 1))
+      const content = lyricList[i - 1] && lyricList[i - 1].content
+      message.open({
+        key: 'lyric',
+        content,
+        duration: 0,
+        className: 'lyric-class'
+      })
     }
   }
 
