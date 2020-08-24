@@ -27,12 +27,9 @@ export default memo(function YDTopBanner() {
   useEffect(() => {
     dispatch(getTopBannerAction())
   }, [dispatch])
-  const bannerChange = useCallback(
-    (from, to) => {
-      setCurrentIndex(to)
-    },
-    [],
-  )
+  const bannerChange = useCallback(current => {
+    setCurrentIndex(current)
+  }, [])
 
   // 其他业务逻辑
   const bgImage = topBanners[currentIndex] && (topBanners[currentIndex].imageUrl + '?imageView&blur=40x20')
@@ -41,7 +38,7 @@ export default memo(function YDTopBanner() {
     <BannerWrapper bgImage={bgImage}>
       <div className="banner wrap-v2">
         <BannerLeft>
-          <Carousel effect="fade" autoplay ref={bannerRef} beforeChange={bannerChange}>
+          <Carousel effect="fade" autoplay ref={bannerRef} afterChange={bannerChange}>
             {
               topBanners.map((item, index) => {
                 return (
